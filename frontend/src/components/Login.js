@@ -11,6 +11,9 @@ const Login = () => {
     const { data } = await axios.post('/api/auth/login', { username, password });
     localStorage.setItem('token', data.token);
     // Redirect user or update state
+
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+
   };
 
   return (

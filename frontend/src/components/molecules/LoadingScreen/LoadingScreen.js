@@ -19,22 +19,44 @@ const LoadingScreen = () => {
  }, []);
 
  const handleSubmit = async (e) => {
- e.preventDefault();
- setIsLoading(true);
- try {
-    const response = await axios.post(`http://localhost:5000/api/auth/${formType}`, { username, password });
-    // Handle successful login/register (e.g., store token, redirect user)
-    console.log(response.data);
-    // Dispatch action to start the game only if login is successful
-    if (formType === 'login') {
-      dispatch(setLoadingScreen(false));
-    }
- } catch (error) {
-    console.error('Error logging in/registering', error);
- } finally {
-    setIsLoading(false);
- }
-};
+  e.preventDefault();
+  setIsLoading(true);
+  try {
+     const response = await axios.post(`http://localhost:5000/api/auth/${formType}`, { username, password });
+     console.log(response.data);
+     // Store the token in local storage (or use Redux, Context API, etc.)
+     localStorage.setItem('token', response.data.token);
+     // Dispatch action to start the game only if login is successful
+     if (formType === 'login') {
+       dispatch(setLoadingScreen(false));
+     }
+  } catch (error) {
+     console.error('Error logging in/registering', error);
+  } finally {
+     setIsLoading(false);
+  }
+ };
+ 
+ // Example function to make an authenticated request
+ const makeAuthenticatedRequest = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+     console.error('No token found');
+     return;
+  }
+ 
+  try {
+     const response = await axios.get('http://localhost:5000/api/save-score', {
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     });
+     console.log(response.data);
+  } catch (error) {
+     console.error('Error making authenticated request', error);
+  }
+ };
+ 
 
 return (
     <div className="loading-screen-container">
