@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setScore, setLastScore } from "../../../config/redux/engineSlice";
 import axios from 'axios';
 import "./Score.css";
 
-const Score = () => {
+const Score = React.memo(() => {
  const score = useSelector(state => state.engine.score);
  const lastScore = useSelector(state => state.engine.lastScore);
  const play = useSelector(state => state.engine.play);
@@ -31,7 +31,7 @@ const Score = () => {
 
  // Function to save the score
  const saveScore = async (score, token) => {
-    console.log('Attempting to save score'); 
+  console.log('Token:', token);
     try {
       const response = await axios.post('http://localhost:5000/api/save-score', { score }, {
         headers: {
@@ -51,5 +51,5 @@ const Score = () => {
       {!play && <p className="score">Last Score: {lastScore}</p>}
     </div>
  )
-}
-export default Score
+});
+export default Score;

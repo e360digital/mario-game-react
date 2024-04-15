@@ -18,6 +18,7 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ username });
     if (user && user.comparePassword(password)) {
        const token = jwt.sign({ sub: user.id }, 'SECRET_KEY');
+      
        res.json({ token });
     } else {
        res.status(401).send();

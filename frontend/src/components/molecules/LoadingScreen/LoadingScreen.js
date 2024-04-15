@@ -4,18 +4,23 @@ import MarioCharacter from '../../../assets/img/mario.png';
 import './LoadingScreen.css';
 import { setLoadingScreen } from '../../../config/redux/engineSlice';
 import { useDispatch } from 'react-redux';
+import Modal from './Modal';
 
 const LoadingScreen = () => {
+  
  const [isReady, setIsReady] = useState(false);
  const [isLoading, setIsLoading] = useState(false);
- const [formType, setFormType] = useState('login'); // 'login' or 'register'
+ const [formType, setFormType] = useState('login');
  const [username, setUsername] = useState('');
  const [password, setPassword] = useState('');
  const dispatch = useDispatch();
+ const [isModalOpen, setIsModalOpen] = useState(false);
+
+ const openModal = () => setIsModalOpen(true);
+ const closeModal = () => setIsModalOpen(false);
 
  useEffect(() => {
-    // Set isReady to true immediately after the component mounts
-    setIsReady(true);
+   setIsReady(true);
  }, []);
 
  const handleSubmit = async (e) => {
@@ -24,9 +29,9 @@ const LoadingScreen = () => {
   try {
      const response = await axios.post(`http://localhost:5000/api/auth/${formType}`, { username, password });
      console.log(response.data);
-     // Store the token in local storage (or use Redux, Context API, etc.)
+  
      localStorage.setItem('token', response.data.token);
-     // Dispatch action to start the game only if login is successful
+
      if (formType === 'login') {
        dispatch(setLoadingScreen(false));
      }
@@ -37,55 +42,42 @@ const LoadingScreen = () => {
   }
  };
  
- // Example function to make an authenticated request
- const makeAuthenticatedRequest = async () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-     console.error('No token found');
-     return;
-  }
- 
-  try {
-     const response = await axios.get('http://localhost:5000/api/save-score', {
-       headers: {
-         Authorization: `Bearer ${token}`,
-       },
-     });
-     console.log(response.data);
-  } catch (error) {
-     console.error('Error making authenticated request', error);
-  }
- };
- 
 
-return (
-    <div className="loading-screen-container">
-      <img src={MarioCharacter} alt="" className="loading-mario" />
-      {!isReady && <h1 className="loading-title">Loading...</h1>}
-      {isReady && (
-        <div>
-          <button onClick={() => setFormType('login')}>Login</button>
-          <button onClick={() => setFormType('register')}>Register</button>
-          {formType === 'login' && (
-            <form onSubmit={handleSubmit}>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-              {isLoading && <p>Loading...</p>}
-              <button type="submit">Login</button>
-            </form>
-          )}
-          {formType === 'register' && (
-            <form onSubmit={handleSubmit}>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-              {isLoading && <p>Loading...</p>}
-              <button type="submit">Register</button>
-            </form>
-          )}
-        </div>
-      )}
-    </div>
- );
+
+ return (
+  <div className="loading-screen-container">
+    <img src={MarioCharacter} alt="" className="loading-mario" />
+    {!isReady && <h1 className="loading-title">Loading...</h1>}
+    {isReady && (
+      <div>
+        <button onClick={() => setIsModalOpen(true)}>Start GAME!</button>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className="auth-forms">
+            <button className="auth-toggle" onClick={() => setFormType('login')}>Login</button>
+            <button className="auth-toggle" onClick={() => setFormType('register')}>Register</button>
+            {formType === 'login' && (
+              <form onSubmit={handleSubmit} className="auth-form">
+               <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+               <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+               {isLoading && <p className="auth-loading">Loading...</p>}
+               <button className="auth-submit" type="submit">Login</button>
+              </form>
+            )}
+            {formType === 'register' && (
+              <form onSubmit={handleSubmit} className="auth-form">
+               <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+               <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+               {isLoading && <p className="auth-loading">Loading...</p>}
+               <button className="auth-submit" type="submit">Register</button>
+              </form>
+            )}
+          </div>
+        </Modal>
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default LoadingScreen;
