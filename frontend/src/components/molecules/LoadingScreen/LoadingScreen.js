@@ -5,6 +5,9 @@ import './LoadingScreen.css';
 import { setLoadingScreen } from '../../../config/redux/engineSlice';
 import { useDispatch } from 'react-redux';
 import Modal from './Modal';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
 
 const LoadingScreen = () => {
   
@@ -27,19 +30,32 @@ const LoadingScreen = () => {
   e.preventDefault();
   setIsLoading(true);
   try {
-     const response = await axios.post(`http://localhost:5000/api/auth/${formType}`, { username, password });
-     console.log(response.data);
-  
-     localStorage.setItem('token', response.data.token);
-
-     if (formType === 'login') {
-       dispatch(setLoadingScreen(false));
-     }
-  } catch (error) {
-     console.error('Error logging in/registering', error);
-  } finally {
-     setIsLoading(false);
-  }
+    const response = await axios.post(`http://localhost:5000/api/auth/${formType}`, { username, password });
+    console.log(response.data);
+ 
+    localStorage.setItem('token', response.data.token);
+ 
+    if (formType === 'login') {
+      NotificationManager.success('Login successful', 'Success');
+      setTimeout(() => {
+        dispatch(setLoadingScreen(false));
+      }, 1000); // Adjust the delay time as needed
+    } else {
+      NotificationManager.success('Registration successful', 'Success');
+    }
+ } catch (error) {
+    console.error('Error logging in/registering', error);
+    if (formType === 'login') {
+      NotificationManager.error('Login failed / Wrong Credentials', 'Error');
+    } else {
+      NotificationManager.error('Registration failed', 'Error');
+    }
+ } finally {
+    setIsLoading(false);
+ }
+ 
+ 
+ 
  };
  
 
@@ -57,26 +73,28 @@ const LoadingScreen = () => {
             <button className="auth-toggle" onClick={() => setFormType('register')}>Register</button>
             {formType === 'login' && (
               <form onSubmit={handleSubmit} className="auth-form">
-               <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-               <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-               {isLoading && <p className="auth-loading">Loading...</p>}
-               <button className="auth-submit" type="submit">Login</button>
+                <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+                <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+                {isLoading && <p className="auth-loading">Loading...</p>}
+                <button className="auth-submit" type="submit">Login</button>
               </form>
             )}
             {formType === 'register' && (
               <form onSubmit={handleSubmit} className="auth-form">
-               <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-               <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-               {isLoading && <p className="auth-loading">Loading...</p>}
-               <button className="auth-submit" type="submit">Register</button>
+                <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+                <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+                {isLoading && <p className="auth-loading">Loading...</p>}
+                <button className="auth-submit" type="submit">Register</button>
               </form>
             )}
           </div>
         </Modal>
       </div>
     )}
+    <NotificationContainer />
   </div>
 );
+
 
 };
 
