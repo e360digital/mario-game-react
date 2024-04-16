@@ -1,7 +1,7 @@
 {
   "name": "mario-jump-game",
   "version": "0.1.0",
-  "homepage": "https://mariojumpp.vercel.app/",
+  "homepage": "https://mario.game.dymax.a2hosted.com/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
