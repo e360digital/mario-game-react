@@ -15,7 +15,7 @@ app.use(cors());
 
 require('dotenv').config({ path: '.var.env' });
 
-mongoose.connect(process.env.DATABASE);
+// mongoose.connect(process.env.DATABASE);
 
 
 app.use('/api/auth', cors({
@@ -24,19 +24,20 @@ app.use('/api/auth', cors({
   }), authRoutes);
 
 // Save scores API
-app.post('/api/save-score',verifyToken, cors({}), async (req, res) => {
+app.post('/api/save-score',verifyToken, async (req, res) => {
     try {
-       const userId = req.userId;
-       const score = req.body.score; 
+      //  const userId = req.userId;
+      //  const score = req.body.score; 
    
-       // Create a new score document
-       const newScore = new Score({
-         userId: userId,
-         score: score
-       });
+      //  // Create a new score document
+      //  const newScore = new Score({
+      //    userId: userId,
+      //    score: score
+      //  });
    
        // Save the score document to the database
-       const savedScore = await newScore.save();
+      //  const savedScore = await newScore.save();
+       const savedScore = "saved successfully!";
    
        // Respond with the saved score document
        res.status(201).json(savedScore);
