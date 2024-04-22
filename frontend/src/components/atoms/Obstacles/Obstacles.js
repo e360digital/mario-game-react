@@ -59,7 +59,7 @@ const Obstacles = () => {
         src={obstacle2}
         alt=""
         className={isPlay ? "obstacle2 obstacle2-move" : "obstacle2"}
-        style={isPlay ? { animationDuration: `${5 - speed}s` } : { animationDuration: `5s` }}
+        style={isPlay ? { animationDuration: `${6 - speed}s` } : { animationDuration: `6s` }}
         ref={obstacle2Ref}
       />
     </div>
