@@ -66,7 +66,7 @@ const LoadingScreen = () => {
     {!isReady && <h1 className="loading-title">Loading...</h1>}
     {isReady && (
       <div>
-        <button onClick={() => setIsModalOpen(true)}>Start GAME!</button>
+        <button className="start-game-button" onClick={() => setIsModalOpen(true)}>Start GAME!</button>
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className="auth-forms">
             <button className="auth-toggle" onClick={() => setFormType('login')}>Login</button>
