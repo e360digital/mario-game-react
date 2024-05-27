@@ -53,12 +53,8 @@ const LoadingScreen = () => {
  } finally {
     setIsLoading(false);
  }
- 
- 
- 
+   
  };
- 
-
 
  return (
   <div className="loading-screen-container">
@@ -69,23 +65,34 @@ const LoadingScreen = () => {
         <button className="start-game-button" onClick={() => setIsModalOpen(true)}>Start GAME!</button>
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className="auth-forms">
-            <button className="auth-toggle" onClick={() => setFormType('login')}>Login</button>
-            <button className="auth-toggle" onClick={() => setFormType('register')}>Register</button>
-            {formType === 'login' && (
-              <form onSubmit={handleSubmit} className="auth-form">
-                <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-                <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-                {isLoading && <p className="auth-loading">Loading...</p>}
-                <button className="auth-submit" type="submit">Login</button>
-              </form>
-            )}
-            {formType === 'register' && (
-              <form onSubmit={handleSubmit} className="auth-form">
-                <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-                <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-                {isLoading && <p className="auth-loading">Loading...</p>}
-                <button className="auth-submit" type="submit">Register</button>
-              </form>
+            {/* Forms rendering based on the current form type */}
+            {formType === 'login'? (
+
+            <form onSubmit={handleSubmit} className="auth-form login-form">
+              <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+              <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+              {isLoading && <p className="auth-loading">Loading...</p>}
+              <button className="auth-submit auth-submit-login" type="submit">Login</button>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="auth-form register-form">
+              <input className="auth-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+              <input className="auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+              {isLoading && <p className="auth-loading">Loading...</p>}
+              <button className="auth-submit auth-submit-register" type="submit">Register</button>
+            </form>
+          )}
+
+
+            {/* Conditional rendering for the toggle button moved to the bottom */}
+            {formType === 'login'? (
+              <button className="auth-toggle" onClick={() => setFormType('register')}>
+                Don't have an account? Register
+              </button>
+            ) : (
+              <button className="auth-toggle" onClick={() => setFormType('login')}>
+                Already have an account? Login
+              </button>
             )}
           </div>
         </Modal>
@@ -94,7 +101,6 @@ const LoadingScreen = () => {
     <NotificationContainer />
   </div>
 );
-
 
 };
 
